@@ -1,6 +1,6 @@
 Name:           forge-parent
 Version:        5
-Release:        6
+Release:        8
 Summary:        Sonatype Forge Parent Pom
 
 Group:          Development/Java
