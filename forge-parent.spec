@@ -57,3 +57,11 @@ rm -rf %{buildroot}
 %{_mavenpomdir}/*
 %{_mavendepmapfragdir}/*
 
+
+
+%changelog
+* Sun Nov 27 2011 Guilherme Moro <guilherme@mandriva.com> 5-8
++ Revision: 733932
+- rebuild
+- imported package forge-parent
+
