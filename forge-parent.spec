@@ -1,67 +1,70 @@
+%{?_javapackages_macros:%_javapackages_macros}
 Name:           forge-parent
-Version:        5
-Release:        8
+Version:        31
+Release:        2.1%{?dist}
 Summary:        Sonatype Forge Parent Pom
-
-Group:          Development/Java
-#Note: The license is confirmed at:
-#http://nexus.sonatype.org/mailing-list-dev-archives.html#nabble-ts28522017
 License:        ASL 2.0
-#svn export http://svn.sonatype.org/forge/tags/forge-parent-5 forge-parent
-URL:            http://svn.sonatype.org/forge/tags/forge-parent-5
-
-# tar czf forge-parent-5.tgz forge-parent
-Source0:        forge-parent-5.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-BuildArch: noarch
-
-BuildRequires: jpackage-utils
-BuildRequires: java
-BuildRequires: java-devel
-
-Requires: jpackage-utils
+URL:            https://docs.sonatype.org/display/FORGE/Index
+Source0:        http://repo1.maven.org/maven2/org/sonatype/forge/%{name}/%{version}/%{name}-%{version}.pom
+Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
+BuildArch:      noarch
+BuildRequires:  maven-local
 
 %description
 Sonatype Forge is an open-source community dedicated to the creation of the 
 next-generation of development tools and technologies.
 
 %prep
-%setup -q -n %{name}
+%setup -qcT
+cp -p %{SOURCE0} pom.xml
+cp -p %{SOURCE1} LICENSE
+# We don't have nexus-staging-maven-plugin in Fedora
+%pom_remove_plugin :nexus-staging-maven-plugin
 
 %build
-#nothing to do for the pom
+%mvn_build
 
 %install
-rm -rf %{buildroot}/
+%mvn_install
 
-%add_to_maven_depmap org.sonatype.forge forge-parent %{version} JPP forge-parent
-
-# poms
-install -d -m 755 %{buildroot}%{_mavenpomdir}
-install -pm 644 pom.xml \
-    %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
-
-%clean
-rm -rf %{buildroot}
-
-%files
-%defattr(-,root,root,-)
-
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
-
-
+%files -f .mfiles
+%doc LICENSE
 
 %changelog
-* Sun Nov 27 2011 Guilherme Moro <guilherme@mandriva.com> 5-8
-+ Revision: 733932
-- rebuild
-- imported package forge-parent
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 31-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Jan 14 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 31-1
+- Update to upstream version 31
+- Install missing LICENSE file
+- Build with xmvn
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Thu May 20 2010 Weinan Li <weli@redhat.com> - 5-5
+- Rebuild for dist-f14-maven221
+
+* Thu May 20 2010 Weinan Li <weli@redhat.com> - 5-4
+- Change JPP.%{name}.pom to JPP-%{name}.pom
+
+* Fri May 14 2010 Weinan Li <weli@redhat.com> - 5-3
+- Each package must consistently use macros, use rm instead of all %{_rm}
+- Add Requires: jpackage-utils
+
+* Thu May 13 2010 Weinan Li <weli@redhat.com> - 5-2
+- Add the license source note
+- Cleanup the svn metadata in source
+- Add the full instructions for creating the tar in the comment 
+
+* Wed May 12 2010 Weinan Li <weli@redhat.com> - 5-1
+- Initial version
