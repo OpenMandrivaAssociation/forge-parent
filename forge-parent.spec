@@ -1,6 +1,6 @@
 Name:           forge-parent
 Version:        38
-Release:        1%{?dist}
+Release:        1
 Summary:        Sonatype Forge Parent Pom
 Group:          Development/Java
 License:        ASL 2.0
